@@ -7,7 +7,6 @@ import About from './Pages/About'
 import Profile from './Pages/Profile'
 import Header from './components/Header'
 const App=()=>{
-  console.log("adasddad")
   return (
     <BrowserRouter>
     <Header />
