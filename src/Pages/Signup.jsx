@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import OAuth from '../components/OAuth';
 
 const Signup = () => {
   const[username, setUsername] = useState('');
@@ -47,9 +48,7 @@ const Signup = () => {
         className='bg-slate-700 p-3 rounded-lg text-white uppercase
         hover:opacity-95 disabled:opacity-80' onClick={handleSignUp}>
           {loading ? "Loading..." : "Sign Up"}</button>
-        <button 
-        className='bg-red-700 p-3 rounded-lg text-white uppercase
-        hover:opacity-95 disabled:opacity-80'>Continue with Google</button>
+        <OAuth/>
       </form>
       <div className='flex gap-2 mt-3'>
         <p>Have an account?</p>
