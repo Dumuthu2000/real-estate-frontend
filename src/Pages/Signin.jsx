@@ -19,7 +19,7 @@ const Signin = () => {
     // setLoading(true);
     dispatch(signInStart());
     const formData = {email, password}
-    await axios.post(`http://localhost:5000/api/auth/signin`, formData)
+    await axios.post(`http://localhost:5000/api/auth/signin`,formData, {withCredentials: true})
     .then((res)=>{
       if(res.data.success === false){
         // setLoading(false);
@@ -29,6 +29,7 @@ const Signin = () => {
       }
       // setLoading(false);
       dispatch(signInSuccess(res.data));
+      console.log(res);
       navigate('/');
     }).catch((err)=>{
       // setLoading(false);
@@ -36,6 +37,7 @@ const Signin = () => {
       dispatch(signInFaliure(err.message));
     })
   }
+ 
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
