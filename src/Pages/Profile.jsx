@@ -2,7 +2,16 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from "../firebase";
-import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "../redux/user/userSlice.js";
+import { 
+  updateUserStart, 
+  updateUserSuccess, 
+  updateUserFailure, 
+  deleteUserStart, 
+  deleteUserSuccess, 
+  deleteUserFailure, 
+  signOutUserStart, 
+  signOutUserSuccess, 
+  signOutUserFailure } from "../redux/user/userSlice.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -71,15 +80,30 @@ const Profile = () => {
       e.preventDefault();
       dispatch(deleteUserStart());
 
-      const result = await axios.delete(`http://localhost:5000/api/user/delete/${currentUser._id}`, { withCredentials: true })
+      const result = await axios.delete(`http://localhost:5000/api/user/delete/${currentUser._id}`)
       if(result.success === false){
         dispatch(deleteUserFailure(result.message));
-        return
+        return;
       }
       dispatch(deleteUserSuccess(result));
-      // navigate('/sign-in');
+      navigate('/sign-in');
     } catch (error) {
       dispatch(deleteUserFailure(error));
+    }
+  }
+
+  const handleUserSignOutBtn=async()=>{
+    try {
+      dispatch(signOutUserStart());
+      const result = await axios.get(`http://localhost:5000/api/auth/signout`, { withCredentials: true });
+      if(result.sucees === false){
+        dispatch(signOutUserFailure(result.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(result));
+      navigate('/sign-in');
+    } catch (error) {
+      dispatch(signOutUserFailure(error));
     }
   }
   return (
@@ -116,7 +140,7 @@ const Profile = () => {
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer" onClick={handleUserDeleteBtn}>Delete account</span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span className="text-red-700 cursor-pointer" onClick={handleUserSignOutBtn}>Sign out</span>
       </div>
     </div>
   )
