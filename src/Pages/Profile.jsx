@@ -1,15 +1,19 @@
 import { useRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from "../firebase";
+import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice.js";
+import axios from "axios";
 
 const Profile = () => {
   const[file, setFile] = useState(undefined);
   const[uploadPercentage, setUploadPercentage] = useState(0);
   const[fileUploadError, setFileUploadError] = useState(false);
   const[formData, setFormData] = useState({});
+
   const{ currentUser } = useSelector(state => state.user);
   const fileRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     if(file){
@@ -36,12 +40,32 @@ const Profile = () => {
         .then((downloadURL)=>{
           setFormData((prev) => ({ ...prev, avatar: downloadURL }));
         })
-      })
+      });
+  }
+
+  const handleChange=(e)=>{
+    setFormData({...formData, [e.target.id]: e.target.value});
+  }
+
+  const handleUpdateBtn=async(e)=>{
+    try {
+      e.preventDefault();
+      dispatch(updateUserStart());
+      const result = await axios.post(`http://localhost:5000/api/user/update/${currentUser._id}`, 
+        formData,  { withCredentials: true })
+      if(result.success === false){
+        dispatch(updateUserFailure(result.message));
+        return
+      }
+      dispatch(updateUserSuccess(result));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
   }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleUpdateBtn}>
         <input
          onChange={(e)=>{
           setFile(e.target.files[0]);
@@ -62,11 +86,11 @@ const Profile = () => {
           }
         </p>
         <input type="text" placeholder="username" id="username"
-        className="border p-3 rounded-lg"/>
+        className="border p-3 rounded-lg" defaultValue={currentUser.username}  onChange={handleChange}/>
         <input type="text" placeholder="email" id="email"
-        className="border p-3 rounded-lg"/>
+        className="border p-3 rounded-lg" defaultValue={currentUser.email}  onChange={handleChange}/>
         <input type="text" placeholder="password" id="password"
-        className="border p-3 rounded-lg"/>
+        className="border p-3 rounded-lg" onChange={handleChange}/>
         <button className="bg-slate-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-95">Update</button>
         <button className="bg-green-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-95">create a listing</button>
       </form>
