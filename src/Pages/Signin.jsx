@@ -29,7 +29,6 @@ const Signin = () => {
       }
       // setLoading(false);
       dispatch(signInSuccess(res.data));
-      console.log(res);
       navigate('/');
     }).catch((err)=>{
       // setLoading(false);

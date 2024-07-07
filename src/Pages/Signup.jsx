@@ -14,7 +14,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true)
     const formData = {username, email, password}
-    await axios.post(`http://localhost:5000/api/auth/signup`, formData)
+    await axios.post(`http://localhost:5000/api/auth/signup`, formData, {withCredentials: true})
     .then((res)=>{
       if(res.data.success === false){
         setLoading(false);

@@ -2,8 +2,9 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from "../firebase";
-import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice.js";
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "../redux/user/userSlice.js";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const[file, setFile] = useState(undefined);
@@ -14,6 +15,7 @@ const Profile = () => {
   const{ currentUser } = useSelector(state => state.user);
   const fileRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(()=>{
     if(file){
@@ -58,8 +60,26 @@ const Profile = () => {
         return
       }
       dispatch(updateUserSuccess(result));
+      navigate('/');
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  }
+
+  const handleUserDeleteBtn=async(e)=>{
+    try {
+      e.preventDefault();
+      dispatch(deleteUserStart());
+
+      const result = await axios.delete(`http://localhost:5000/api/user/delete/${currentUser._id}`, { withCredentials: true })
+      if(result.success === false){
+        dispatch(deleteUserFailure(result.message));
+        return
+      }
+      dispatch(deleteUserSuccess(result));
+      // navigate('/sign-in');
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
     }
   }
   return (
@@ -95,7 +115,7 @@ const Profile = () => {
         <button className="bg-green-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-95">create a listing</button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
+        <span className="text-red-700 cursor-pointer" onClick={handleUserDeleteBtn}>Delete account</span>
         <span className="text-red-700 cursor-pointer">Sign out</span>
       </div>
     </div>
