@@ -14,6 +14,7 @@ import {
   signOutUserFailure } from "../redux/user/userSlice.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const[file, setFile] = useState(undefined);
@@ -136,7 +137,7 @@ const Profile = () => {
         <input type="text" placeholder="password" id="password"
         className="border p-3 rounded-lg" onChange={handleChange}/>
         <button className="bg-slate-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-95">Update</button>
-        <button className="bg-green-700 p-3 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-95">create a listing</button>
+        <Link to={`/create-listing`} className="bg-green-700 p-3 rounded-lg text-center text-white uppercase hover:opacity-95 disabled:opacity-95">create a listing</Link>
       </form>
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer" onClick={handleUserDeleteBtn}>Delete account</span>
