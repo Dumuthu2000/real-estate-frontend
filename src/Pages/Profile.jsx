@@ -134,6 +134,28 @@ const Profile = () => {
       setShowListingError(true);
     }
   }
+
+  const handleDeleteLsiting=async(listingID)=>{
+    const token = Cookies.get('access_token');
+    try {
+      const result = await axios.delete(`http://localhost:5000/api/listing/delete/${listingID}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        withCredentials: true, 
+      });
+
+      if(result.data.success === false){
+        return console.log(result.data);
+      }
+
+      setUserListings((prev)=>{
+        prev.filter((listing)=>{listing._id !== listingID})
+      })
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -181,7 +203,7 @@ const Profile = () => {
                 <p>{listings.name}</p>
               </Link>
               <div className="flex flex-col">
-                  <button className="text-red-700 uppercase">Delete</button>
+                  <button onClick={()=>handleDeleteLsiting(listings._id)} className="text-red-700 uppercase">Delete</button>
                   <button className="text-green-700 uppercase">Edit</button>
               </div>
           </div>
