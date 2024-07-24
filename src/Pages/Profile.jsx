@@ -15,12 +15,15 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Profile = () => {
   const[file, setFile] = useState(undefined);
   const[uploadPercentage, setUploadPercentage] = useState(0);
   const[fileUploadError, setFileUploadError] = useState(false);
   const[formData, setFormData] = useState({});
+  const[showListingError, setShowListingError] = useState(false);
+  const[userListings, setUserListings] = useState([]);
 
   const{ currentUser } = useSelector(state => state.user);
   const fileRef = useRef(null);
@@ -107,6 +110,30 @@ const Profile = () => {
       dispatch(signOutUserFailure(error));
     }
   }
+
+  const handleShowListings=async(e)=>{
+    e.preventDefault();
+    setShowListingError(false);
+    const token = Cookies.get('access_token');
+    try {
+      const result = await axios.get(`http://localhost:5000/api/user/listings/${currentUser._id}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        withCredentials: true
+      });
+
+      if(result.data.success === false){
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(result.data);
+      console.log(userListings);
+
+    } catch (error) {
+      setShowListingError(true);
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -142,6 +169,24 @@ const Profile = () => {
       <div className="flex justify-between mt-5">
         <span className="text-red-700 cursor-pointer" onClick={handleUserDeleteBtn}>Delete account</span>
         <span className="text-red-700 cursor-pointer" onClick={handleUserSignOutBtn}>Sign out</span>
+      </div>
+      <div className="flex flex-col mt-2">
+        <button onClick={handleShowListings} className="text-green-700 w-full mb-6">Show Listings</button>
+        {userListings && userListings.length > 0 && userListings.map((listings)=>(
+          <div key={listings._id} className="flex items-center justify-between gap-2 border p-3 mb-2 rounded-lg">
+              <Link to={`/listings/${listings._id}`}>
+                <img src={listings.imageURLs[0]} alt="listing cover" className="h-16 w-16"/>
+              </Link>
+              <Link to={`/listings/${listings._id}`} className="text-slate-700 font-semibold hover:underline flex-1 truncate">
+                <p>{listings.name}</p>
+              </Link>
+              <div className="flex flex-col">
+                  <button className="text-red-700 uppercase">Delete</button>
+                  <button className="text-green-700 uppercase">Edit</button>
+              </div>
+          </div>
+        ))}
+        <p className="text-red-700 text-sm">{showListingError ? 'Cannot showing your listings' : ''}</p>
       </div>
     </div>
   )
