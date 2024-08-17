@@ -131,7 +131,8 @@ const CreateListing = () => {
                 setLoading(false);
                 return;
             }
-            navigate(`/create-listing/${result.data._id}`);
+            // navigate(`/create-listing/${result.data._id}`);
+            navigate(`/`);
         } catch (error) {
             setSubmitError(error);
             setLoading(false);

@@ -45,7 +45,7 @@ const Signin = () => {
         className='border rounded-lg p-3 outline-none' id='email' onChange={(e)=>{
           setEmail(e.target.value)
         }}/>
-        <input type="text" placeholder='password'
+        <input type="password" placeholder='password'
         className='border rounded-lg p-3 outline-none' id='password' onChange={(e)=>{
           setPassword(e.target.value)
         }}/>
