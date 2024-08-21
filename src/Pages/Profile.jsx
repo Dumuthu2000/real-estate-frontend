@@ -66,7 +66,7 @@ const Profile = () => {
     try {
       e.preventDefault();
       dispatch(updateUserStart());
-      const result = await axios.post(`http://localhost:5000/api/user/update/${currentUser._id}`, 
+      const result = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user/update/${currentUser._id}`, 
         formData,  { withCredentials: true })
       if(result.success === false){
         dispatch(updateUserFailure(result.message));
@@ -84,7 +84,7 @@ const Profile = () => {
       e.preventDefault();
       dispatch(deleteUserStart());
 
-      const result = await axios.delete(`http://localhost:5000/api/user/delete/${currentUser._id}`)
+      const result = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/user/delete/${currentUser._id}`)
       if(result.success === false){
         dispatch(deleteUserFailure(result.message));
         return;
@@ -99,7 +99,7 @@ const Profile = () => {
   const handleUserSignOutBtn=async()=>{
     try {
       dispatch(signOutUserStart());
-      const result = await axios.get(`http://localhost:5000/api/auth/signout`, { withCredentials: true });
+      const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signout`, { withCredentials: true });
       if(result.sucees === false){
         dispatch(signOutUserFailure(result.message));
         return;
@@ -116,7 +116,7 @@ const Profile = () => {
     setShowListingError(false);
     const token = Cookies.get('access_token');
     try {
-      const result = await axios.get(`http://localhost:5000/api/user/listings/${currentUser._id}`,{
+      const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/listings/${currentUser._id}`,{
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -138,7 +138,7 @@ const Profile = () => {
   const handleDeleteLsiting=async(listingID)=>{
     const token = Cookies.get('access_token');
     try {
-      const result = await axios.delete(`http://localhost:5000/api/listing/delete/${listingID}`,{
+      const result = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/listing/delete/${listingID}`,{
         headers: {
           'Authorization': `Bearer ${token}`,
         },

@@ -115,7 +115,7 @@ const CreateListing = () => {
             if(formData.regularPrice < formData.discountPrice){
                 setSubmitError('Discount price must lower than regular price');
             }    
-            const result = await axios.post(`http://localhost:5000/api/listing/create`,{
+            const result = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/listing/create`,{
                 ...formData, 
                 userRef: currentUser._id,
                 },

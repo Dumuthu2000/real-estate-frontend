@@ -11,7 +11,7 @@ const Contact = ({listing}) => {
         const fetchLandlord=async()=>{
             try {
                 const token = Cookie.get('access_token');
-                const result = await axios.get(`http://localhost:5000/api/user/${listing.userRef}`,{
+                const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/${listing.userRef}`,{
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

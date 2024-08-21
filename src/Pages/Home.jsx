@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(()=>{
     const fetchOfferListings=async()=>{
       try {
-        const result = await axios.get(`http://localhost:5000/api/listing/get-listings?offer=true&limit=4`);
+        const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/listing/get-listings?offer=true&limit=4`);
         setOfferListings(result.data);
         fetchSaleListings();
       } catch (error) {
@@ -27,7 +27,7 @@ const Home = () => {
 
     const fetchSaleListings=async()=>{
       try {
-        const result = await axios.get(`http://localhost:5000/api/listing/get-listings?sale=true&limit=4`);
+        const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/listing/get-listings?sale=true&limit=4`);
         setSaleListings(result.data);
       } catch (error) {
         console.log(error.message);

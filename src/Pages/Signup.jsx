@@ -14,7 +14,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true)
     const formData = {username, email, password}
-    await axios.post(`http://localhost:5000/api/auth/signup`, formData, {withCredentials: true})
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, formData, {withCredentials: true})
     .then((res)=>{
       if(res.data.success === false){
         setLoading(false);
