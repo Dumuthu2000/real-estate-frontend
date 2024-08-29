@@ -34,7 +34,7 @@ const UpdateListing = () => {
     useEffect(()=>{
       const fetchListing=async(listingID)=>{
         try {
-          const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/listing/get-listing/${listingID}`);
+          const result = await axios.get(`http://localhost:5000/api/listing/get-listing/${listingID}`);
 
           if(result.data.success === false){
             console.log(result.data);
@@ -135,7 +135,7 @@ const UpdateListing = () => {
             if(formData.regularPrice < formData.discountPrice){
                 setSubmitError('Discount price must lower than regular price');
             }    
-            const result = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/listing/update/${listingID}`,{
+            const result = await axios.post(`http://localhost:5000/api/listing/update/${listingID}`,{
                 ...formData, 
                 userRef: currentUser._id,
                 },

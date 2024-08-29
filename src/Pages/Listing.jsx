@@ -32,7 +32,7 @@ const Listing = () => {
         const fetchListing=async(listingID)=>{          
             try {
                 setLoading(true);
-                const result = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/listing/get-listing/${listingID}`);
+                const result = await axios.get(`http://localhost:5000/api/listing/get-listing/${listingID}`);
 
                 if(result.data.success === false){
                     setError(true);
