@@ -21,7 +21,7 @@ const OAuth = () => {
         email:result.user.email,
         profileImage:result.user.photoURL,
       }
-      const data = await axios.post(`http://localhost:5000/api/auth/google`, formData)
+      const data = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/google`, formData)
       dispatch(signInSuccess(data));
       navigate('/');
     } catch (error) {
